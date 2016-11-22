@@ -1,0 +1,116 @@
+<template>
+  <div>
+    <div>this is template body</div>
+    <notlogin></notlogin>
+    <testing></testing>
+  </div>
+</template>
+<style>
+  body {
+    background-color: #ffffff;
+  }
+</style>
+<script>
+  import Vue from 'vue'
+  import axios from 'axios'
+  import config from '../../config/index'
+  import ycookie from 'vue-cookie'
+  import yutil from '../utils/utils'
+  import FormData from 'form-data'
+
+  var user, token, agent, timekey
+  user = yutil.yDecode(ycookie.get('user.name'))
+  token = yutil.yDecode(ycookie.get('user.token'))
+  agent = yutil.yEncode(navigator.appVersion)
+  timekey = yutil.yEncode(yutil.getTimekey())
+  console.log('user: ' + JSON.stringify(user))
+  console.log('token: ' + JSON.stringify(token))
+  console.log('agent: ' + JSON.stringify(yutil.yDecode(agent)))
+  console.log('timekey: ' + JSON.stringify(yutil.yDecode(timekey)))
+
+  var tnotloggedin = '<div><input v-model="buser" placeholder="Your name" v-on:keyup.enter="blogin()">' +
+    '<input v-model="bpass" placeholder="Password" v-on:keyup.enter="blogin()"></div>'
+
+  var tloggedin = '<div>Welcome {{agent}}!<button v-on:click="blogout()">logout</button></div>'
+
+  var ttesting = '<div>Testing to see if this can be kept after axios function call.</div>'
+  Vue.component('testing', {template: ttesting})
+  console.log('in yLogin')
+
+    var vm = this
+
+  if (!yutil.isset(user) || !yutil.isset(token) || !yutil.isset(timekey)) {
+    console.log('either !user !token !timekey')
+    Vue.component('notlogin', {
+      data: function () {
+        return {
+          aaa: 'ab',
+          agent: 'firefox',
+          tplin: tloggedin
+//          buser: 'Your name',
+//          bpass: 'Password'
+        }
+      },
+      template: tnotloggedin,
+      methods: {
+        blogin: function () {
+          var v1 = this
+          var formjson = {}
+          formjson.username = this.buser
+          formjson.usertoken = this.bpass
+          formjson.agent = agent
+          formjson.timekey = timekey
+          axios.post('/userLogin', formjson,
+            { headers: { 'Content-Type': 'application/json' } }).then(function (response) {
+            console.log('v1.$options.template: ' + v1.$options.template)
+            v1.$options.template = v1.$data.tplin
+            Vue.set(v1, 'aab', 'abc')
+          }).catch(function(err) {
+            console.log(err)
+            Vue.set(vm, 'aab', 'abc')
+          })
+        }
+      }
+    })
+  }
+
+  //  Vue.component('ylogin', function (resolve, reject) {
+  //    axios.post(config.dev.hosturl + '/userLogin', formdata).then(function (response) {
+  //      console.log(response)
+  //      var options = {};
+  //      if (response.status == 403) {
+  //        options['template'] = tnotloggedin
+  //        options['methods'] = {
+  //          methods: {
+  //            blogin: function () {
+  //              var formdata = new FormData()
+  //              formdata.append('user.name', user)
+  //              formdata.append('user.token', token)
+  //              formdata.append('agent', agent)
+  //              formdata.append('timekey', timekey)
+  //              axios.post(config.dev.hosturl + '/userLogin', formdata).then(function (response1) {
+  //                Vue.set(vm, 'a', -1)
+  //              })
+  //            }
+  //          }
+  //        }
+  //      } else if (response.status == 200) {
+  //        options['template'] = tloggedin
+  //        options['methods'] = {
+  //          methods: {
+  //            blogout: function () {
+  //              var user = yutil.yDecode(ycookie.get('user.name'))
+  //              var token = yutil.yDecode(ycookie.get('user.token'))
+  //              var agent = yutil.yEncode(navigator.appVersion)
+  //              var timekey = yutil.yEncode(yutil.getTimekey())
+  //              ycookie.delete('user.name')
+  //              ycookie.delete('user.token')
+  //              Vue.set(vm, 'a', -1)
+  //            }
+  //          }
+  //        }
+  //      }
+  //      resolve(options)
+  //    })
+  //  })
+</script>

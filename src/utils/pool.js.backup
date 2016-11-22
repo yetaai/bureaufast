@@ -1,0 +1,31 @@
+/**
+ * Created by oefish on 9/24/2016.
+ */
+var Promise = require('bluebird')
+var mysql = require('mysql');
+var myconfig = {
+  connectionLimit: 200,
+  host: 'localhost',
+  port: 3306,
+  user: 'root',
+  password: 'elttil',
+  database: 'test',
+  debug: false
+};
+var pool = mysql.createPool(myconfig);
+pool.myconfig = myconfig;
+
+pool.getConnection(function (err, conn) {
+  if (err) {
+    console.log(err)
+  } else {
+    conn.query('set GLOBAL sql_mode = "STRICT_ALL_TABLES"', [], function (err, rs) {
+      if (err) {
+        console.log(err)
+      } else {
+        // console.log('exporting pool after set to STRICT_ALL_TABLES')
+      }
+    })
+  }
+})
+module.exports = pool

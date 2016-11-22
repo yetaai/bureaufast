@@ -1,0 +1,14 @@
+var express = require('express')
+// var bodyParser = require('body-parser')
+var router = express.Router();
+
+router.get('/yfirsttest', function(req, res, next) {
+  var ystatus = req.query.ystatus;
+  if (ystatus && ystatus == '10') {
+    res.status(200).json('ok' + ystatus);
+  } else {
+    res.status(200).json('false');
+  }
+})
+module.exports = router;
+//Client/server sent timeKey: Always encoded.

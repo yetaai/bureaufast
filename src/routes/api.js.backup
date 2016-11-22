@@ -1,0 +1,167 @@
+var express = require('express')
+var bodyParser = require('body-parser')
+var router = express.Router();
+var pool = require('../utils/pool');
+var utils = require('../utils/utils');
+var sha256 = require('sha256');
+var Promise = require('bluebird');
+var biz = requrie("../utils/biz")
+Promise.config({
+  longStackTraces: true,
+  warnings: true // note, run node with --trace-warnings to see full stack traces for warnings
+})
+
+router.use(bodyParser.urlencoded({extended: true}));
+router.use(bodyParser.json);
+
+router.get('/yfirsttest', function(req, res, next) {
+  if (ystatus == '10') {
+    res.status(200).json("ok" + ystatus);
+  } else {
+    res.status(200).json("false");
+  }
+})
+router.post('/userLogin', function (req, res, next) {
+  var clientToken = req.body.user.token; //Had been hash twice and second time with timeKey as salt.
+  var username = req.body.user.name;
+  var useragent = req.body.user.agent;
+  var rawTimeKey = utils.getTimekey();
+  var timeKey = utils.yEncode(rawTimeKey);
+  var timeKeyNeg = utils.yEncode(rawTimeKey - 1);
+  biz.authen(username, timeKey, clientToken).then(function (value) {
+    res.status(200).json(value);
+  }).catch(function (err) {
+    biz.authen(username, timeKeyNeg, clientToken).then(function (value1) {
+      res.status(200).json(value1);
+    }).catch(function (err1) {
+      res.status(403).json(err1); //err is ignored!
+    })
+  })
+});
+router.post('/hisLogin', function (req, res, next) {
+  var newToken;
+  var u = req.body.user.u;
+  var newTimeKey;
+  var clientToken = req.body.user.token; //Had been hash twice and second time with timeKey as salt.
+  var timeKey = req.body.user.timeKey;
+  var useragent = req.body.useragent;
+  biz.authen(u, timeKey, clientToken).then(function (value) {
+    res.status(200).json(value);
+  }).catch(function (err) {
+      res.status(403).json(err);
+  })
+})
+
+router.post('/admin/objecttype/list', function (reg, res, next) {
+  var u = req.body.user.u;
+  var clientToken = req.body.user.token;
+  var timeKey = req.body.user.timeKey;
+  biz.authen(u, timeKey, clientToken).then(function (value) {
+    var hasAdmin = false;
+    for  (var i in u.roles) {
+      if (u.roles[i].toLowerCase() == "admin") {
+        hasadmin = true;
+        break;
+      }
+    }
+    if (hasAdmin) {
+      pool.getConnection(function(err, conn) {
+        var result = [];
+        if (err) {
+          res.status(402).json(err);
+        } else {
+          conn.query("select ot, name from ot", [], function(err, rows){
+            if (err) {
+              res.status(402).json(err);
+            } else {
+              for (var i in rows) {
+                result.push({"ot": rows[i].ot, "name": rows[i].name})
+              }
+              res.status(200).json(result);
+            }
+          })
+        }
+      })
+    }
+  }).catch(function(err1) {
+    console.log(err1);
+  });
+});
+router.post('/admin/objecttype/update', function (req, res, next) {
+});
+
+router.get('/admin/roles/config', function (req, res, next) {
+});
+router.post('/admin/roles/config', function (req, res, next) {
+});
+
+router.post('/admin/roles/assign', function (req, res, next) {
+});
+
+router.post('/roles/list/', function (req, res, next) {
+  var u = req.body.user.u;
+  var clientToken = req.body.user.token;
+  var timeKey = req.body.user.timeKey;
+  biz.authen(u, timeKey, clientToken).then(function(uinfo) {
+    res.status(200).json(uinfo.roles);
+  }).catch(function(err) {
+    res.status(401).json(err);
+  })
+})
+
+router.post('/report/ot/:ot', function (req, res, next) { //req.params.ot
+  var u = req.body.user.u;
+  var clientToken = req.body.user.token;
+  var timeKey = req.body.user.timeKey;
+  var waiting = req.body.waiting;
+  var refused = req.body.refused;
+  var partialReleased = req.body.partialReleased;
+  var finallyReleased = req.body.finallyReleased;
+  biz.authen(u, timeKey, clientToken).then(function(vuinfo) {
+    var ot = req.params.ot;
+    biz.getUOtSet(vuinfo, ot, waiting, refused, partialReleased, finallyReleased).then(function (values) {
+      res.status(200).json(values);
+    })
+  }).catch(function(err){
+    res.status(402).json(err);
+  })
+});
+
+router.post('/display/ot', function(req, res, next) {
+  var u = req.body.user.u;
+  var clientToken = req.body.user.token;
+  var timeKey = req.body.user.timeKey;
+  var ot = req.body.ot;
+  var objkey = req.body.objkey;
+
+  biz.authen(u, timeKey, clientToken).then(function(uinfo) {
+    biz.getOts(ot).then(function(ots) {
+      otstree = biz.otsTree(ots);
+      biz.dataone(ot, objkey, ots, otstree, uinfo).then(function(values) {
+        res.status(200).json(values);
+      })
+    }).catch(function(err) {
+      res.status(401).json(err);
+    })
+  })
+})
+router.post('/ot/process', function (req, res, next) {
+  var u = req.body.user.u;
+  var clientToken = req.body.user.token;
+  var timeKey = req.body.user.timeKey;
+  var ot = req.body.ot;
+  var objkey = req.body.objkey;
+  var rlc = req.body.rlc;
+  var comment = req.body.comment;
+  biz.authen(u, timekey, clientToken).then(function(uinfo) {
+    biz.getOts(ot).then(function(ots) {
+      biz.otstree(ots).then(function(otstree) {
+        bigz.processone(uinfo, ot, ots, otstree, rlc, objkey, comment)
+          .then(function(value) { res.status(200).json("RLC: " + rlc + " sucessfull!")})
+          .catch(function(err) {res.status(401).json("RLC: " + rlc + " failed.")})
+      })
+    })
+  })
+});
+module.exports = router;
+//Client/server sent timeKey: Always encoded.
