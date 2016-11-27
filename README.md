@@ -1,4 +1,4 @@
-# bureaufast
+# Bureaufast
 
 Bureaufast is an open source workflow engine using Vue.js and Mysql with node.js modules.
 
