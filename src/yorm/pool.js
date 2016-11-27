@@ -8,8 +8,8 @@ var myconfig = {
   connectionLimit: 200,
   host: 'localhost',
   port: 3306,
-  user: 'root',
-  password: 'elttil',
+  user: 'tt',
+  password: 'password',
   database: lschema,
   debug: false
 };

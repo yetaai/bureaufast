@@ -18,7 +18,7 @@ module.exports.bufferinit = function() {
 
     pool.getConnection(function (errz, connz) {
       if (errz) {
-        console.log('errz' + errz)
+        console.log('errz: ' + errz)
       }
       connz.query('select table_name as tn from information_schema.tables where table_schema = "' + pool.database + '"', [], function (erry, rsy) {
         connz.release()

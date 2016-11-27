@@ -1,27 +1,24 @@
 # bureaufast
 
-> Bureaufast
+Bureaufast is an open source workflow engine using Vue.js and Mysql with node.js modules.
 
-## Build Setup
+If prefer, you can pull the docker by command
+
+sudo docker pull bigdecimap/bureaufast:0.9.3
+
+# Git clone then install by npm is also good.
+
 
 ``` bash
-# install dependencies
+## install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
+## serve with hot reload at localhost:8080
 npm run dev
-
-# build for production with minification
-npm run build
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
 
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+Feel free to list your usage here.
+
+Note you need to create a database tt with DB username/password then config it in src/yorm/pool.js.
+
+By docker, currently environment variable for DB configuration is not ready this verion. But will be supported next one.
