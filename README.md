@@ -17,8 +17,10 @@ npm run dev
 
 Feel free to list your usage here.
 
-Note you need to create a database tt with DB username/password then config it in src/yorm/pool.js.
+Note you can config Mysql DB name/user/password in src/yorm/pool.js. But you have to create the database and user manually.
 
 Then run dbinit.js to populate master data which contains an object type of SAP purchase order and Web Sales order.
 
 By docker, currently environment variable for DB configuration is not ready this verion. But will be supported next one.
+
+There are multiple users like Mogao/Jingwei/
