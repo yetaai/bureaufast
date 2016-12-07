@@ -23,4 +23,4 @@ Then run dbinit.js to populate master data which contains an object type of SAP 
 
 By docker, currently environment variable for DB configuration is not ready this verion. But will be supported next one.
 
-There are multiple users like Mogao/Jingwei/
+There are multiple users in testing DB Mogao/Jingwei/Walker/Songjiang/Saodiseng with different roles/languages. All have the same passwords as user name.
