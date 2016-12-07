@@ -6,10 +6,10 @@ var mysql = require('mysql')
 var lschema = 'test'
 var myconfig = {
   connectionLimit: 200,
-  host: 'localhost',
+  host: '127.0.0.1',
   port: 3306,
   user: 'tt',
-  password: 'password',
+  password: 'elttil',
   database: lschema,
   debug: false
 };

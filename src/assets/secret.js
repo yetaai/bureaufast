@@ -9,5 +9,8 @@ module.exports = {
   timekey: 'adj747lLjm',
   g001: 'initial defined',
   txtfilter: 1000000000,
-  txtmaxitems: 1000000001
+  txtmaxitems: 1000000001,
+  txttaskonly: 1000100000,
+  txttaskrel: 1000100001,
+  txttaskall: 1000100002
 }

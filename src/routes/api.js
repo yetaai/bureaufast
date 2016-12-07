@@ -331,7 +331,7 @@ router.post('/getobjs', jsonParser, function (req, res, next) {
     }
     p0(ssqlcnt, ot).then(function() {
       var slimit
-      if (uinfo.lt == 3) {
+      if (uinfo.lt == safe.txttaskall) { //List type
         slimit = ' limit ' + (result[sot].page * pagesize - pagesize).toString() + ', ' + pagesize.toString()
       } else {
         slimit = ''
@@ -389,11 +389,11 @@ router.post('/getobjs', jsonParser, function (req, res, next) {
     }).then(function(value) {
       var item
       var zresult
-      if (uinfo.lt == 3) {
+      if (uinfo.lt == safe.txttaskall) { // all
         // result[sot].totalpages = Math.floor(result[sot].objs.length / uinfo.pagesize) + 1
         res.status(200).json(result)
       } else {
-        if (uinfo.lt == 2) {
+        if (uinfo.lt == safe.txttaskrel) {
           zresult = []
           for (var i in result[sot].objs) {
             item = result[sot].objs[i]
@@ -408,11 +408,13 @@ router.post('/getobjs', jsonParser, function (req, res, next) {
             result[sot].page = page
           }
           result[sot].objs = zresult.splice(result[sot].page * uinfo.pagesize - uinfo.pagesize, result[sot].page * uinfo.pagesize)
-        } else if (uinfo.lt == 1) {
+        } else if (uinfo.lt == safe.txttaskonly) {
           zresult = []
+          // console.log('+++++++++++++++++++++++++++++++++++result[sot].objs: ' + JSON.stringify(result[sot].objs))
+          var lk = 0
           for (var i in result[sot].objs) {
             item = result[sot].objs[i]
-            if (item.urrlcs.length != undefined && item.urrlcs.length > 0 && uinfo.org.indexOf(item.yorg) >= 0) {
+            if (item.urrlcs != undefined && item.urrlcs.length > 0 && uinfo.org.indexOf(item.yorg) >= 0) {
               zresult.push(item)
             }
           }

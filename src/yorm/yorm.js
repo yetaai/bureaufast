@@ -699,7 +699,7 @@ var savemany = function (tn, objs, pbatchsize, dupup) {
       var erra = new Error()
       erra.name = 'zerorecords'
       erra.message = 'Warning: No records to savemany for table ' + tn
-      resovle(erra)
+      resolve(erra)
       return
     }
     var tbldef = module.exports.tbldefs[tn]

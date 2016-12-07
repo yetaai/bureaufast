@@ -22,7 +22,6 @@ var proxyTable = config.dev.proxyTable
 var app = express()
 app.use(routes)
 var compiler = webpack(webpackConfig)
-
 var devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
   stats: {
@@ -62,7 +61,6 @@ app.use(hotMiddleware)
 // serve pure static assets
 var staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsSubDirectory)
 app.use(staticPath, express.static('./static'))
-
 try {
   module.exports = app.listen(port, function (err) {
     if (err) {

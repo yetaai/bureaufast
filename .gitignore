@@ -5,6 +5,7 @@ npm-debug.log
 test/unit/coverage
 test/e2e/reports
 selenium-debug.log
+/db/dbinit2.js
 .dockerignore
 Dockerfile
 iptablesStatus.txt

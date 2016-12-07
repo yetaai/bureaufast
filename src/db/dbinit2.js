@@ -17,7 +17,55 @@ uInfo.rlc = ['b-', 'b0']
 //     })
 //   })
 // })
-yorm.bufferinit().then(function() {
+
+yorm.bufferinit().then(function (){
+  return new Promise(function(resolve, reject) {
+    yorm.getmany('txts', '').then(function(txts){
+      var dictzh = {}
+      dictzh.tblname = '表名'
+      dictzh.fldname = '字段名'
+      dictzh.reswk = '供货工厂'
+      dictzh.comment = '注解'
+      dictzh.ekorg = '采购组织'
+      dictzh.stc = '状态码'
+      dictzh.laststc = '最近状态码'
+      dictzh.ebeln = '采购订单'
+      dictzh.frgzu = 'SAP状态'
+      dictzh.lifnr = '供应商'
+      dictzh.kunnr = '客户号'
+      dictzh.zterm = '付款方式'
+      var dicten_US = {}
+      dicten_US.tblname = 'Tbl name'
+      dicten_US.fldname = 'Fld name'
+      dicten_US.reswk = 'Supply Plt'
+      dicten_US.comment = 'Comment'
+      dicten_US.ekorg = 'POrg'
+      dicten_US.stc = 'St code'
+      dicten_US.laststc = 'Last stc'
+      dicten_US.ebeln = 'PO'
+      dicten_US.frgzu = 'SAP status'
+      dicten_US.lifnr = 'Vendor'
+      dicten_US.kunnr = 'Cust no.'
+      dicten_US.zterm = 'Pay term'
+      var t
+      for (var i in txts) {
+        t = txts[i]
+        if (t.fldname && t.locale == 'cn') {
+          t.txt = dictzh[t.fldname.trim().toLowerCase()]
+        } else if (t.fldname && t.locale == 'en-US') {
+          t.txt = dicten_US[t.fldname.trim().toLowerCase()]
+        }
+      }
+      yorm.savemany('txts', txts, 0, true).then(function() {
+        reject("Transalte txts successfully. Testing right now, so no more testing data.")
+      }).catch(function(e) {
+        reject("====Failed to translate txts table: " + e)
+      })
+    }).catch(function(e) {
+      reject('Error in dbinit2: ' + e)
+    })
+  })
+}).then(function() {
   var p0 = yorm.getmany('ot1ekko', {'ebeln': '4500000002'})
   var p1 = yorm.getmany('yot1ekko', {'ebeln': '4500000002'})
   var p2 = yorm.getmany('yot1next', {'ebeln': '4500000002'})
@@ -67,6 +115,9 @@ yorm.bufferinit().then(function() {
       process.exit(1)
     })
   })
+}).catch(function(e) {
+  console.log("Finally print error: " + e)
+  process.exit(2)
 })
 
 // var test = function() {

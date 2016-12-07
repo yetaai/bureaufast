@@ -176,7 +176,11 @@ insert into txts (id, locale, txt, comment)
           (1000100002, 'cn', '全部', 'list type all'),
           (1000100000, 'en-US', 'Task', 'list type Task'),
           (1000100001, 'en-US', 'Relevant', 'list type Relevant'),
-          (1000100002, 'en-US', 'All', 'list type all')
+          (1000100002, 'en-US', 'All', 'list type all'),
+          (1000000000, 'cn', '过滤', ''),/*Not for list type*/
+          (1000000001, 'cn', '最多', ''),
+          (1000000000, 'en-US', 'filter', ''),
+          (1000000001, 'en-US', 'Max items', '')
    on duplicate key update id = values(id), locale = values(locale), txt = values(txt), comment = values(comment);
 
 drop table if exists rolerlc;
@@ -208,24 +212,24 @@ drop table if exists u;
 create table if not exists u(u int, name varchar(50), password char(64), autolist boolean, cookiedays int not null default 2, locale char(10),
                             dateformat char(20), pagesize int, lt int, primary key (u));
 create unique index uname on u (name);
-insert into u values (2, 'admin', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100002),
+insert into u values (2, 'admin', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100002),
              (1, 'Mogao', '', true, 1, 'cn', 'YYYY-MM-DD', 50, 1000100002),
              (3, 'Yaoshun', '', false, 1, 'cn', 'YYYY-MM-DD', 50, 1000100002),
-             (4, 'Shimin', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100001),
+             (4, 'Shimin', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100001),
              (5, 'Guanyin', '', false, 2, 'cn', 'YYYY-MM-DD', 50, 1000100002),
-             (6, 'Jingwei', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100002),
-             (7, 'Mozi',  '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100002),
-             (8, 'Yugong', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100001),
-             (21, 'Wusong', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100002),
-             (22, 'Songjiang', '', true, 1, 'en_US', 'MM/DD/YY', 50, 1000100002),
-             (36, 'Saodiseng', '', true, 1, 'en_US', 'MM/DD/YY', 50, 1000100000),
-             (37, 'Fangzheng', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100000),
-             (38, 'Buhui', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100002),
-             (39, 'Dust cleaner', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100002),
-             (72, 'Eight dont', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100002),
-             (73, 'John', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100000),
-             (76, 'Julia', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100000),
-             (77, 'Walker', '', false, 1, 'en_US', 'MM/DD/YY', 50, 1000100002)
+             (6, 'Jingwei', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100002),
+             (7, 'Mozi',  '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100002),
+             (8, 'Yugong', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100001),
+             (21, 'Wusong', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100002),
+             (22, 'Songjiang', '', true, 1, 'en-US', 'MM/DD/YY', 50, 1000100002),
+             (36, 'Saodiseng', '', true, 1, 'en-US', 'MM/DD/YY', 50, 1000100000),
+             (37, 'Fangzheng', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100000),
+             (38, 'Buhui', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100002),
+             (39, 'Dust cleaner', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100002),
+             (72, 'Eight dont', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100002),
+             (73, 'John', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100000),
+             (76, 'Julia', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100000),
+             (77, 'Walker', '', false, 1, 'en-US', 'MM/DD/YY', 50, 1000100002)
              ;
 
 drop table if exists urole;

@@ -436,7 +436,7 @@ var abc = function () {
                   sval = '(';
                 }
                 var tc = r.table_name + '|' + r.column_name;
-                sval = sval + i + ',' + ' "en_US",  "' + tc + '", "' + r.table_name + '", "' + r.column_name + '"), ('
+                sval = sval + i + ',' + ' "en-US",  "' + tc + '", "' + r.table_name + '", "' + r.column_name + '"), ('
               }
               var ssql = sins + sval.substr(0, sval.length - 3);
               // console.log("assembled statement: " + ssql);
@@ -474,47 +474,11 @@ var abc = function () {
                   if (err31) {
                     reject(err31)
                   }
-                  conn.query('update txts t inner join txtbackup b on t.tblname = b.tblname and t.fldname = b.fldname set t.txt = b.txt', [], function (err32, rs32) {
-                    if (err32) {
-                      reject(err32)
+                  conn.query('insert into txts select id, "cn", txt, tblname, fldname, comment from txts where id not in (?, ?, ?, ?, ?)', [1000000000, 1000000001, 1000100000,1000100001, 1000100002], function (err35, rs35) {
+                    if (err35) {
+                      reject(err35)
                     } else {
-                      conn.query('insert into txts (id, locale, txt, tblname, fldname, comment) values (?, ?, ?, ?, ?, ?)', [safe.txtfilter, 'en-US', 'Filter by', '', '', ''], function (err33, rs33) {
-                        if (err33) {
-                          reject(err33)
-                        } else {
-                          conn.query('insert into txts (id, locale, txt, tblname, fldname, comment) values (?, ?, ?, ?, ?, ?)', [safe.txtmaxitems, 'en-US', 'Max items', '', '', ''], function (err34, rs34) {
-                            if (err34) {
-                              reject(err34)
-                            } else {
-                              conn.query('insert into txts select id, "cn", txt, tblname, fldname, comment from txts where id not in (?, ?, ?)', [1000100000,1000100001, 1000100002], function (err35, rs35) {
-                                if (err35) {
-                                  reject(err35)
-                                } else {
-                                  conn.query('update txts set txt = "过滤" where id = ? and locale = ?', [safe.txtfilter, 'cn'], function (err36, rs36) {
-                                    if (err36) {
-                                      reject(err36)
-                                    } else {
-                                      conn.query('update txts set txt = "最多行数" where id = ? and locale = ?', [safe.txtmaxitems, 'cn'], function (err37, rs37) {
-                                        if (err37) {
-                                          reject(err37)
-                                        } else {
-                                          conn.query('update txts set txt = "采购订单" where fldname = "ebeln" and locale = "cn"', [], function (err38, rs38) {
-                                            if (err38) {
-                                              reject(err38)
-                                            } else {
-                                              resolve()
-                                            }
-                                          })
-                                        }
-                                      })
-                                    }
-                                  })
-                                }
-                              })
-                            }
-                          })
-                        }
-                      })
+                      resolve()
                     }
                   })
                 })
